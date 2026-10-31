@@ -27,10 +27,17 @@ A separate n8n workflow listens for workflow errors and sends an alert through G
 - **Google Gemini** for ticket classification
 - **Google Sheets** for keeping ticket records
 - **Gmail** for email notifications
+- 
+## Project files
 
+- [Workflow overview](docs/workflow-overview.md)
+- [Main n8n workflow](workflow/SupportFlow%20main.json)
+- [Error-alert workflow](workflow/Erroralert-workflow.json)
+- [Main workflow screenshot](screenshots/supportflow-workflow.png)
+- [Error-alert screenshot](screenshots/supportflow-error-workflow.png)
+  
 ## About this project
-
-SupportFlow AI is a portfolio project exploring how AI and automation can support a customer service workflow. Setup notes and a workflow diagram will be added as the project documentation grows.
+SupportFlow AI is a portfolio project exploring how AI and automation can support customer service. This repository includes the two n8n workflow exports, an overview, and screenshots.
 ## Privacy and security
 
 This is a public repository. It should contain no API keys, login details, private email addresses, customer information, or real support tickets. Keep integration credentials in n8n, and use fictional data in any examples or screenshots.
