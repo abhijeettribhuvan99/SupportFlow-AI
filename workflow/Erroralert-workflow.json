@@ -1,0 +1,69 @@
+{
+  "name": "Error Alert workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "efc95f2c-5182-4fb0-a057-0e9904d79987",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "",
+        "subject": "SupportFlow AI — Workflow Failure",
+        "emailType": "text",
+        "message": "=SupportFlow AI encountered a workflow error.  Workflow: {{ $json.workflow.name }} Execution ID: {{ $json.execution.id }}  Error details: {{ $json.execution.error.message }}  Please check the failed execution in n8n.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        0
+      ],
+      "id": "010f8c7c-8156-4a27-b9a7-48a96372443e",
+      "name": "Send a message",
+      "webhookId": "",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8468446c-a18e-4c4b-87e2-04743c1ef864",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": ""
+  },
+  "nodeGroups": [],
+  "id": "P6suK4KkIZCcXM3W",
+  "tags": []
+}
