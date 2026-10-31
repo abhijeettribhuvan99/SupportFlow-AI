@@ -5,7 +5,7 @@
 SupportFlow AI is an n8n project that helps organize support requests from the moment they come in. It checks the sender’s email address, asks Google Gemini to suggest a ticket category and priority, saves the results in Google Sheets, and routes email notifications through Gmail.
 
 The goal is to make incoming requests easier to review and prioritize, while keeping a person in control of the final support decision.
-
+![SupportFlow AI workflow overview](screenshots/supportflow-workflow.png)
 ## How it works
 
 1. A support ticket enters the workflow.
