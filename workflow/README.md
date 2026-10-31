@@ -14,4 +14,6 @@ It receives a support form submission, validates the email address, uses Gemini 
 4. Review the form, priority rules, and notification recipients.
 5. Test with fictional ticket details and confirm the expected row and email are created before publishing the workflow.
 
-The export is inactive. The separate error-alert workflow is not included in this file.
+## Separate error-alert workflow
+
+`Erroralert-workflow.json` handles workflow failures and sends a Gmail alert. To use it, connect your own Gmail account and set the alert recipient in the `Send a message` node. Like the main export, it is inactive.
