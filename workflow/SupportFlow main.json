@@ -1,0 +1,653 @@
+{
+  "name": "SupportFlow AI",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "",
+              "name": "=Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "",
+              "name": "Email Address",
+              "value": "={{ $('On form submission').item.json['Email Address'] }}",
+              "type": "string"
+            },
+            {
+              "id": "",
+              "name": "Description",
+              "value": "={{ $('On form submission').item.json['Describe your problem'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        752,
+        0
+      ],
+      "id": "",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "formTitle": "SupportFlow AI",
+        "formDescription": "Please enter the Following Details.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email Address",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Confirm your Email Address",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Describe your problem",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #fbfcfe;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #dbdfe7;\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #525356;\n\t--color-label: #555555;\n\t--color-input-border: #dbdfe7;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(90, 76, 194);\n\t--color-submit-btn-bg: #ff6d5a;\n\t--color-submit-btn-text: #ffffff;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        176,
+        96
+      ],
+      "id": "",
+      "name": "On form submission",
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.1-flash-lite",
+          "mode": "list",
+          "cachedResultName": "Gemini 3.1 Flash Lite"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an AI customer support ticket classifier. Your job is to analyze the customer's actual issue, classify it accurately, and draft a helpful reply.\n\nCUSTOMER DETAILS\nName: {{ $json.Name}}\nEmail: {{ $json['Email Address'] }}\n\nACTUAL SUPPORT ISSUE:\n{{ $json.Description }}\n\nIMPORTANT RULES:\n\n1. Read the ACTUAL SUPPORT ISSUE above carefully. It is the source of truth.\n2. Never assume the description is missing unless the supplied value is genuinely empty.\n3. Never invent a different issue or ask the customer to repeat information already provided.\n4. Choose the most relevant category: Login, Billing, Technical, Account, or Other.\n5. Set priority to High, Medium, or Low based on the issue's urgency and impact.\n6. Write a professional, empathetic suggested reply that directly addresses the reported issue.\n7. If the customer reports being unable to log in, classify it as Login and respond with relevant troubleshooting steps. Do not classify it as Other unless the description indicates a different problem.\n8. Return only a valid JSON object with exactly these three fields:\n   {\n   \"category\": \"Login, Billing, Technical, Account, or Other\",\n   \"priority\": \"High, Medium, or Low\",\n   \"suggested_reply\": \"A helpful response tailored to the actual issue\"\n   }\n   Do not include Markdown code fences or explanations outside the JSON.",
+              "role": "model"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        912,
+        0
+      ],
+      "id": "b5814121-1f5d-47c6-9534-9e0203f76733",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const responseText = $input.first().json.content.parts[0].text;\nconst cleanJson = JSON.parse(responseText.replace(/```json|```/g, \"\").trim());\nreturn [{ json: cleanJson }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "5b69704b-e18b-4c75-8710-8c18c9c533fc",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4d9efbb3-b626-4326-a469-ff1c2553f7a6",
+              "name": "ticket_id",
+              "value": "={{ 'TKT-' + $now.toMillis() }}",
+              "type": "string"
+            },
+            {
+              "id": "a4c44a2f-84c8-41b3-8583-9bf2a9977b7e",
+              "name": "Name",
+              "value": "={{ $('Edit Fields').item.json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "92ef5e9e-e822-403b-8867-5c3e152e3375",
+              "name": "Email",
+              "value": "={{ $('Edit Fields').item.json['Email Address'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4b4b10f0-cb96-41cf-ba6c-e38abc002b24",
+              "name": "Description",
+              "value": "={{ $('Edit Fields').item.json.Description }}",
+              "type": "string"
+            },
+            {
+              "id": "19ca3af2-5f8c-4b11-9789-1f209c8a889d",
+              "name": "category",
+              "value": "={{ $json.category }}",
+              "type": "string"
+            },
+            {
+              "id": "436d61ba-262a-4f59-81c0-f6882ee2f19c",
+              "name": "priority",
+              "value": "={{ $json.priority }}",
+              "type": "string"
+            },
+            {
+              "id": "17142685-7187-49ee-9ab9-7d5e632be109",
+              "name": "suggested_reply",
+              "value": "={{ $json.suggested_reply }}",
+              "type": "string"
+            },
+            {
+              "id": "5eb11915-1cc9-4fec-a697-ac83bf227dbe",
+              "name": "status",
+              "value": "=pending review",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1344,
+        0
+      ],
+      "id": "8cda05b2-ca53-4e24-984a-924a4d926177",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Support ticket automation",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ticket_id": "={{ $json.ticket_id }}",
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Decription": "={{ $json.Description }}",
+            "suggested_reply": "={{ $json.suggested_reply }}",
+            "status": "={{ $json.status }}",
+            "priority": "={{ $json.priority }}",
+            "category": "={{ $json.category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ticket_id",
+              "displayName": "ticket_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Decription",
+              "displayName": "Decription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "suggested_reply",
+              "displayName": "suggested_reply",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1504,
+        0
+      ],
+      "id": "b9eada30-d51b-47ff-89f6-a00e978681b1",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "Email Mismatch",
+        "completionMessage": "Your email address and confirmation email do not match. Please go back and submit the form again with matching email addresses.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        752,
+        272
+      ],
+      "id": "2e9aebee-c235-4c64-bf22-00182d6ea0fa",
+      "name": "Redirected Form",
+      "webhookId": "" 
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "92c803fe-279c-4b62-8bdb-f3f342b638a6",
+              "name": "Name",
+              "value": "={{ $json.Name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        368,
+        96
+      ],
+      "id": "5fe9fbbb-692d-43f2-9f5c-77f9fc2bc91c",
+      "name": "Edit Name"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "411efa5b-9556-49c0-bc7d-6641d4946eda",
+              "leftValue": "={{ $('On form submission').item.json['Email Address'] }}",
+              "rightValue": "={{ $('On form submission').item.json['Confirm your Email Address'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        544,
+        96
+      ],
+      "id": "49c83642-1373-493d-8cfe-916e9b1203cc",
+      "name": "Email Validation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "aee9092d-2d1a-41bb-9b8f-adc0ae0e0d0c",
+              "leftValue": "={{ $('Edit Fields1').item.json.priority }}",
+              "rightValue": "High",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "d716cf06-d086-4d45-b60e-755ab4e07d62",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1824,
+        0
+      ],
+      "id": "cae1a627-28e7-4766-a924-461b0e04c2fa",
+      "name": "Priority Email Classification"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "Form Submitted Successfully.",
+        "completionMessage": "Your Support Ticket is Submitted Our Team will contact you Soon.",
+        "options": {
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #fbfcfe;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #f6dcb7;\n\t--color-card-bg: #ffffff;\n\t--color-card-border: #dbdfe7;\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #525356;\n\t--color-label: #555555;\n\t--color-input-border: #dbdfe7;\n\t--color-input-text: #71747A;\n\t--color-focus-border: rgb(90, 76, 194);\n\t--color-submit-btn-bg: #ff6d5a;\n\t--color-submit-btn-text: #ffffff;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #7e8186;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1664,
+        0
+      ],
+      "id": "ffe341fb-b68d-4833-b335-97cead224486",
+      "name": "Form submitted successfully",
+      "webhookId": "",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "=",
+        "subject": "=Support Ticket Update — {{ $json.ticket_id }}",
+        "emailType": "text",
+        "message": "=A new medium-priority support ticket has been received and logged.\n\nTicket ID: {{ $json.ticket_id }}\n\nCustomer: {{ $json.Name }}\n\nSuggested Reply:\n\n{{ $json.suggested_reply }}\n\nStatus: Pending Review\n\nPlease review and respond when possible.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2048,
+        160
+      ],
+      "id": "ea5299c6-f806-43b0-a2d2-e8f3ee3bc76e",
+      "name": "Medium Priority Email for Support Team Review",
+      "webhookId": "",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json['Email Address'] }}",
+        "subject": "=High Priority Support Ticket - {{ $json.ticket_id }}",
+        "emailType": "text",
+        "message": "=A high-priority support ticket has been received.\nTicket ID: {{ $json.ticket_id }}\nCustomer: {{ $json.Name }}\n\n{{ $json.suggested_reply }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2048,
+        -112
+      ],
+      "id": "1acdf3c8-0c5f-4c6a-9519-169bfafc5e1a",
+      "name": "High Priority Email to Form Applicants Email",
+      "webhookId": "",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Form submitted successfully",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Name": {
+      "main": [
+        [
+          {
+            "node": "Email Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Validation": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Redirected Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Priority Email Classification": {
+      "main": [
+        [
+          {
+            "node": "High Priority Email to Form Applicants Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Medium Priority Email for Support Team Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form submitted successfully": {
+      "main": [
+        [
+          {
+            "node": "Priority Email Classification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "P6suK4KkIZCcXM3W",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "00c9e8fb-3b7e-4d7c-8006-d2e58dc900ef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": ""
+  },
+  "nodeGroups": [],
+  "id": "M4lIZprmU9gDKMJY",
+  "tags": []
+}
