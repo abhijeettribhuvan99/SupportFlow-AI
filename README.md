@@ -15,6 +15,12 @@ The goal is to make incoming requests easier to review and prioritize, while kee
 5. Gmail sends a notification based on the routing logic.
 6. Global error handling helps manage workflow failures.
 
+## Error handling
+
+A separate n8n workflow listens for workflow errors and sends an alert through Gmail.
+
+![SupportFlow AI error handling workflow](screenshots/supportflow-error-workflow.png)
+
 ## Built with
 
 - **n8n** for connecting and automating the steps
