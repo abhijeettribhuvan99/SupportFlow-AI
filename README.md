@@ -30,8 +30,7 @@ A separate n8n workflow listens for workflow errors and sends an alert through G
 
 ## About this project
 
-SupportFlow AI is a portfolio project exploring how AI and automation can support a customer service workflow. Setup notes, workflow diagrams, and screenshots will be added as the project documentation is prepared.
-
+SupportFlow AI is a portfolio project exploring how AI and automation can support a customer service workflow. Setup notes and a workflow diagram will be added as the project documentation grows.
 ## Privacy and security
 
 This is a public repository. It should contain no API keys, login details, private email addresses, customer information, or real support tickets. Keep integration credentials in n8n, and use fictional data in any examples or screenshots.
